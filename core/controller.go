@@ -182,10 +182,10 @@ func (c *Controller) isAuthenticated(r *http.Request, endpoint string) bool {
 		}
 		return claims.Secret == c.spec.Endpoints.Static.Secret
 	case "thumbnail":
-		if c.spec.Endpoints.Stop.Secret == "" {
+		if c.spec.Endpoints.Thumbnail.Secret == "" {
 			return true
 		}
-		return claims.Secret == c.spec.Endpoints.Stop.Secret
+		return claims.Secret == c.spec.Endpoints.Thumbnail.Secret
 	}
 	return true
 }
