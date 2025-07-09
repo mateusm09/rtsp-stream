@@ -12,6 +12,7 @@ endpoints:
         secret: macilaci
     thumbnail:
         enabled: true
+        secret: macilaci
 
 listen:
     - alias: sample

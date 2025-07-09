@@ -156,8 +156,9 @@ func (c *Controller) isAuthenticated(r *http.Request, endpoint string) bool {
 	if !c.spec.JWTEnabled {
 		return true
 	}
-	token, claims := c.jwt.Validate(r.Header.Get("Authorization"))
+	token, _ := c.jwt.Validate(r.Header.Get("Authorization"))
 	if token == nil || !token.Valid {
+		logrus.Debugln("invalid token")
 		return false
 	}
 	switch endpoint {
@@ -165,27 +166,22 @@ func (c *Controller) isAuthenticated(r *http.Request, endpoint string) bool {
 		if c.spec.Endpoints.List.Secret == "" {
 			return true
 		}
-		return claims.Secret == c.spec.Endpoints.List.Secret
 	case "start":
 		if c.spec.Endpoints.Start.Secret == "" {
 			return true
 		}
-		return claims.Secret == c.spec.Endpoints.Start.Secret
 	case "stop":
 		if c.spec.Endpoints.Stop.Secret == "" {
 			return true
 		}
-		return claims.Secret == c.spec.Endpoints.Stop.Secret
 	case "static":
 		if c.spec.Endpoints.Static.Secret == "" {
 			return true
 		}
-		return claims.Secret == c.spec.Endpoints.Static.Secret
 	case "thumbnail":
 		if c.spec.Endpoints.Thumbnail.Secret == "" {
 			return true
 		}
-		return claims.Secret == c.spec.Endpoints.Thumbnail.Secret
 	}
 	return true
 }
