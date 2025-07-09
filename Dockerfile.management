@@ -24,6 +24,6 @@ RUN apk update && apk add bash ca-certificates ffmpeg nodejs npm && rm -rf /var/
 RUN npm install http-server -g
 COPY ./build/management/supervisord.conf /etc/supervisord.conf
 WORKDIR /app
-COPY --from=build-backend /go/src/github.com/Roverr/rtsp-stream/server /app/
+COPY --from=build-backend /app/ /app/
 COPY ./build/rtsp-stream.yml /app/rtsp-stream.yml
 COPY --from=build-ui /tmp/ui/dist /ui/

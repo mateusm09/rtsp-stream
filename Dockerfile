@@ -14,6 +14,6 @@ RUN go build -o server
 FROM alpine
 RUN apk update && apk add bash ca-certificates ffmpeg && rm -rf /var/cache/apk/*
 WORKDIR /app
-COPY --from=build-env /go/src/github.com/Roverr/rtsp-stream/server /app/
+COPY --from=build-env /app/ /app/
 COPY ./build/rtsp-stream.yml /app/rtsp-stream.yml
 ENTRYPOINT [ "/app/server" ]
