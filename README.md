@@ -45,7 +45,7 @@ Because the application relies on ffmpeg heavily therefore ensuring the environm
 The application has an offical [Docker repository](https://hub.docker.com/r/roverr/rtsp-stream/) at Dockerhub, therefore you can easily run it with simple commands:
 
 ```s
-docker run -p 80:8080 roverr/rtsp-stream:2
+docker run -p 80:8080 mellomateus/rtsp-stream:3
 ```
 
 ## Easy API
@@ -115,7 +115,7 @@ You can use the included UI for handling the streams. The UI is not a compact so
 Running it with docker:
 
 ```s
-docker run -p 80:80 -p 8080:8080 roverr/rtsp-stream:2-management
+docker run -p 80:80 -p 8080:8080 mellomateus/rtsp-stream:3-management
 ```
 
 If you decide to use the management image, you should know that port 80 is flexible, you can set it to whatever you prefer, but 8080 is currently burnt into the UI as the ultimate port of the backend.
