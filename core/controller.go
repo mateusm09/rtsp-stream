@@ -21,13 +21,15 @@ import (
 	"github.com/mateusm09/rtsp-stream/core/config"
 	"github.com/riltech/streamer"
 	"github.com/sirupsen/logrus"
+
+	"github.com/mateusm09/rtsp-stream/core/ffmpeg"
 )
 
 // ErrUnexpected describes an unexpected error
-var ErrUnexpected = errors.New("Unexpected error")
+var ErrUnexpected = errors.New("unexpected error")
 
 // ErrTimeout describes an error related to timing out
-var ErrTimeout = errors.New("Timeout error")
+var ErrTimeout = errors.New("timeout error")
 
 // StreamDTO describes an uri where the client can access the stream
 type StreamDTO struct {
@@ -64,6 +66,7 @@ type IController interface {
 	StaticFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)        // handler - GET /stream/{id}/{file}
 	StopStreamHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)        // handler - POST /stop
 	ExitPreHook() chan bool                                                               // runs before the application exits to clean up
+	GetThumbnail(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 }
 
 // Controller holds all handler functions for the API
@@ -133,7 +136,7 @@ func (c *Controller) marshalValidatedURI(dto *StreamDTO, body io.Reader) error {
 	}
 
 	if _, err := url.Parse(dto.URI); err != nil {
-		return errors.New("Invalid URI")
+		return errors.New("invalid uri")
 	}
 	return nil
 }
@@ -178,6 +181,11 @@ func (c *Controller) isAuthenticated(r *http.Request, endpoint string) bool {
 			return true
 		}
 		return claims.Secret == c.spec.Endpoints.Static.Secret
+	case "thumbnail":
+		if c.spec.Endpoints.Stop.Secret == "" {
+			return true
+		}
+		return claims.Secret == c.spec.Endpoints.Stop.Secret
 	}
 	return true
 }
@@ -485,7 +493,7 @@ func (c *Controller) StaticFileHandler(w http.ResponseWriter, req *http.Request,
 
 	if url, ok := c.shouldRedirectAlias(id, filepath); ok {
 		logrus.Infoln("redirecting alias " + id + " to " + url)
-		http.Redirect(w, req, url, 302)
+		http.Redirect(w, req, url, http.StatusFound)
 		return
 	}
 
@@ -517,7 +525,41 @@ func (c *Controller) ExitPreHook() chan bool {
 			}
 			logrus.Debugf("Succesfully closed processing for %s", uri)
 		}
+
+		os.RemoveAll(fmt.Sprintf("%s/thumb", c.spec.StoreDir))
 		done <- true
 	}()
 	return done
+}
+
+// Gets a Thumbnail from a given RTSP stream
+func (c *Controller) GetThumbnail(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	if !c.isAuthenticated(req, "thumbnail") {
+		c.sendError(w, errors.New("unauthorized"), http.StatusForbidden)
+		return
+	}
+
+	uri := ps.ByName("uri")
+	// removes the trailing slash on the param
+	cuttedStr, found := strings.CutPrefix(uri, "/")
+	if found {
+		uri = cuttedStr
+	}
+
+	if _, err := url.Parse(uri); err != nil {
+		logrus.Error(err)
+		c.sendError(w, errors.New("invalid uri"), http.StatusBadRequest)
+		return
+	}
+
+	// the file path is the RTSP uri encoded, so it does not conflict with the slashes of the OS path
+	filepath := fmt.Sprintf("%s/thumb/%s.jpg", c.spec.StoreDir, url.PathEscape(uri))
+
+	if err := ffmpeg.GenerateThumbnail(uri, filepath, c.spec.ThumbCacheTime); err != nil {
+		logrus.Error(err)
+		c.sendError(w, errors.New("unable to generate thumbnail"), http.StatusInternalServerError)
+		return
+	}
+
+	http.ServeFile(w, req, filepath)
 }

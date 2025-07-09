@@ -1,8 +1,8 @@
 package config
 
 import (
-	"io/ioutil"
 	"log"
+	"os"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -46,17 +46,19 @@ type Blacklist struct {
 
 // Process describes information regarding the transcoding process
 type Process struct {
-	CleanupEnabled bool          `envconfig:"CLEANUP_ENABLED" default:"true"` // Option to turn of cleanup
-	CleanupTime    time.Duration `envconfig:"CLEANUP_TIME" default:"2m0s"`    // Time period between process cleaning
-	StoreDir       string        `envconfig:"STORE_DIR" default:"./videos"`   // Directory to store / service video chunks
-	KeepFiles      bool          `envconfig:"KEEP_FILES" default:"false"`     // Option for not deleting files
-	Audio          bool          `envconfig:"AUDIO_ENABLED" default:"true"`   // Option for enabling audio
+	CleanupEnabled bool          `envconfig:"CLEANUP_ENABLED" default:"true"`    // Option to turn of cleanup
+	CleanupTime    time.Duration `envconfig:"CLEANUP_TIME" default:"2m0s"`       // Time period between process cleaning
+	StoreDir       string        `envconfig:"STORE_DIR" default:"./videos"`      // Directory to store / service video chunks
+	KeepFiles      bool          `envconfig:"KEEP_FILES" default:"false"`        // Option for not deleting files
+	Audio          bool          `envconfig:"AUDIO_ENABLED" default:"true"`      // Option for enabling audio
+	ThumbCacheTime time.Duration `envconfig:"THUMB_CACHE_TIME" default:"1h0m0s"` // Time of cache duration for a thumbnail
 }
 
 // Specification describes the application context settings
 type Specification struct {
-	Debug bool `envconfig:"DEBUG" default:"false"` // Indicates if debug log should be enabled or not
-	Port  int  `envconfig:"PORT" default:"8080"`   // Port that the application listens on
+	Debug      bool   `envconfig:"DEBUG" default:"false"` // Indicates if debug log should be enabled or not
+	Port       int    `envconfig:"PORT" default:"8080"`   // Port that the application listens on
+	ConfigFile string `envconfig:"CONFIG_FILE" default:"rtsp-stream.yml"`
 
 	CORS
 	Blacklist
@@ -73,21 +75,22 @@ type EndpointSetting struct {
 }
 
 type ListenSetting struct {
-	Enabled        bool          `yaml:"enabled"`
-	Uri    		   string 		 `yaml:"uri"`
-	Alias          string        `yaml:"alias"`
+	Enabled bool   `yaml:"enabled"`
+	Uri     string `yaml:"uri"`
+	Alias   string `yaml:"alias"`
 }
 
 // EndpointYML describes the yml structure used
 type EndpointYML struct {
 	Version   string `yaml:"version"`
 	Endpoints struct {
-		Start  EndpointSetting `yaml:"start"`
-		Stop   EndpointSetting `yaml:"stop"`
-		List   EndpointSetting `yaml:"list"`
-		Static EndpointSetting `yaml:"static"`
+		Start     EndpointSetting `yaml:"start"`
+		Stop      EndpointSetting `yaml:"stop"`
+		List      EndpointSetting `yaml:"list"`
+		Static    EndpointSetting `yaml:"static"`
+		Thumbnail EndpointSetting `yaml:"thumbnail"`
 	} `yaml:"endpoints"`
-	Listen [] ListenSetting `yaml:"listen"`
+	Listen []ListenSetting `yaml:"listen"`
 }
 
 // InitConfig is to initalise the config
@@ -106,7 +109,12 @@ func InitConfig() *Specification {
 	defer func() {
 		s.EndpointYML = setting
 	}()
-	dat, err := ioutil.ReadFile("rtsp-stream.yml")
+
+	configPath := "rtsp-stream.yml"
+	if s.ConfigFile != "" {
+		configPath = s.ConfigFile
+	}
+	dat, err := os.ReadFile(configPath)
 	if err != nil {
 		logrus.Errorf("error: %v", err)
 		return &s

@@ -40,6 +40,10 @@ func main() {
 		router.POST("/stop", controllers.StopStreamHandler)
 		logrus.Infoln("stop endpoint enabled | MainProcess")
 	}
+	if config.EndpointYML.Endpoints.Thumbnail.Enabled {
+		router.GET("/thumbnail/*uri", controllers.GetThumbnail)
+		logrus.Infoln("thumbnail endpoint enabled | MainProcess")
+	}
 
 	done := controllers.ExitPreHook()
 	handler := cors.AllowAll().Handler(router)

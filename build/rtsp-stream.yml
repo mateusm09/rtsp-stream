@@ -1,18 +1,19 @@
 version: 1.0
 endpoints:
-  start:
-    enabled: true
-  static:
-    enabled: true
-  stop:
-    enabled: true
-    secret: macilaci
-  list:
-    enabled: true
-    secret: macilaci
+    start:
+        enabled: true
+    static:
+        enabled: true
+    stop:
+        enabled: true
+        secret: macilaci
+    list:
+        enabled: true
+        secret: macilaci
+    thumbnail:
+        enabled: true
 
 listen:
-  - alias: sample
-    uri: rtsp://user:pass@host/Streaming/Channels/123/
-    enabled: false
-
+    - alias: sample
+      uri: rtsp://user:pass@host/Streaming/Channels/123/
+      enabled: false
