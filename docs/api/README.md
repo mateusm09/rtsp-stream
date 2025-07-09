@@ -27,6 +27,8 @@ endpoints:
     list:
         enabled: true
         secret: macilaci
+    thumbnail:
+        enabled: true
 listen:
     - alias: camera1
       uri: rtp://user:pass@host/camera/123
@@ -53,6 +55,8 @@ endpoints:
     list:
         enabled: true
         secret: macilaci
+    thumbnail:
+        enabled: true
 listen:
     - alias: camera1
       uri: rtp://user:pass@host/camera/123

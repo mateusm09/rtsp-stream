@@ -1,12 +1,12 @@
 # <img src="./docs/rtsp-stream.png"/>
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/mateusm09/rtsp-stream)](https://goreportcard.com/report/github.com/mateusm09/rtsp-stream)
-[![Maintainability](https://api.codeclimate.com/v1/badges/202152e83296250ab527/maintainability)](https://codeclimate.com/github/Roverr/rtsp-stream/maintainability)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![GitHub last commit](https://img.shields.io/github/last-commit/Roverr/rtsp-stream.svg)
-![GitHub release](https://img.shields.io/github/release/Roverr/rtsp-stream.svg)
+![GitHub last commit](https://img.shields.io/github/last-commit/mateusm09/rtsp-stream.svg)
+![GitHub release](https://img.shields.io/github/release/mateusm09/rtsp-stream.svg)
 
 rtsp-stream is an easy to use, out of box solution that can be integrated into existing systems resolving the problem of not being able to play raw rtsp stream natively in browsers.
+
+**Important**: This is a fork of the original [roverr/rtsp-stream](https://github.com/Roverr/rtsp-stream). The main difference is that this version can generate thumbnails for the streams. Also the Go version was updated.
 
 ## Table of contents
 
