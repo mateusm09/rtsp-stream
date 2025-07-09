@@ -10,16 +10,17 @@ rtsp-stream is an easy to use, out of box solution that can be integrated into e
 
 ## Table of contents
 
--   [How does it work](#how-does-it-work)
--   [Run with Docker](#run-with-docker)
--   [Easy API](#easy-api)
--   [Authentication](#authentication)
-    -   [JWT](#jwt-authentication)
--   [Configuration](#configuration)
--   [UI](#ui)
--   [Debug](#debug)
--   [Proven players](#proven-players)
--   [Contributions and reporting issues](#contributions-and-reporting-issues)
+-   [](#)
+    -   [Table of contents](#table-of-contents)
+    -   [How does it work](#how-does-it-work)
+    -   [Run with Docker](#run-with-docker)
+    -   [Easy API](#easy-api)
+    -   [Authentication](#authentication)
+    -   [Configuration](#configuration)
+    -   [UI](#ui)
+    -   [Debug](#debug)
+    -   [Proven players](#proven-players)
+    -   [Contributions and reporting issues](#contributions-and-reporting-issues)
 
 ## How does it work
 
@@ -55,6 +56,7 @@ There are 4 endpoints that are fully configurable to call
 -   `/stream/id/*fileId` - static endpoint to serve video files for your browser
 -   `/list` - lists streams already known
 -   `/stop` - stops and removes a given stream
+-   `/thumbnail/*uri` - gets a thumbnail of a stream
 
 [Read full documentation on API](docs/api/README.md).
 
@@ -96,8 +98,9 @@ You won't need the private key for it because no signing happens in this applica
 The application tries to be as flexible as possible therefore there are a lot of configuration options available.
 You can set the following information in the application:
 
--   Sub directory where the application stores video chunks
+-   Sub directory where the application stores video chunks and thumbnails
 -   Time period for the cleanup process that stops streams if they are inactive
+-   Time period for thumbnail caching
 -   Option to keep all video chunks forever instead of removing them when a stream becomes inactive
 -   Logging options for the underlying ffmpeg process
 -   CORS and other HTTP related options for the backend server itself

@@ -1,12 +1,13 @@
 ## Build stage
-FROM golang:1.13-alpine AS build-env
-ADD ./main.go /go/src/github.com/Roverr/rtsp-stream/main.go
-ADD ./core /go/src/github.com/Roverr/rtsp-stream/core
-ADD ./Gopkg.toml /go/src/github.com/Roverr/rtsp-stream/Gopkg.toml
-WORKDIR /go/src/github.com/Roverr/rtsp-stream
+FROM golang:1.23-alpine AS build-env
+WORKDIR /app
+ADD ./main.go /app/main.go
+ADD ./core /app/core
+ADD ./go.mod /app/go.mod
+ADD ./go.sum /app/go.sum
+
 RUN apk add --update --no-cache git
-RUN go get -u github.com/golang/dep/cmd/dep
-RUN dep ensure -v
+RUN go mod download
 RUN go build -o server
 
 ## Creating potential production image
