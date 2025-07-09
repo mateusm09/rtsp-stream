@@ -1,24 +1,25 @@
 # <img src="./docs/rtsp-stream.png"/>
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/Roverr/rtsp-stream)](https://goreportcard.com/report/github.com/Roverr/rtsp-stream)
- [![Maintainability](https://api.codeclimate.com/v1/badges/202152e83296250ab527/maintainability)](https://codeclimate.com/github/Roverr/rtsp-stream/maintainability)
- [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
- ![GitHub last commit](https://img.shields.io/github/last-commit/Roverr/rtsp-stream.svg)
- ![GitHub release](https://img.shields.io/github/release/Roverr/rtsp-stream.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mateusm09/rtsp-stream)](https://goreportcard.com/report/github.com/mateusm09/rtsp-stream)
+[![Maintainability](https://api.codeclimate.com/v1/badges/202152e83296250ab527/maintainability)](https://codeclimate.com/github/Roverr/rtsp-stream/maintainability)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub last commit](https://img.shields.io/github/last-commit/Roverr/rtsp-stream.svg)
+![GitHub release](https://img.shields.io/github/release/Roverr/rtsp-stream.svg)
 
-rtsp-stream is an easy to use, out of box solution that can be integrated into existing systems resolving the problem of not being able to play raw rtsp stream natively in browsers. 
+rtsp-stream is an easy to use, out of box solution that can be integrated into existing systems resolving the problem of not being able to play raw rtsp stream natively in browsers.
 
 ## Table of contents
-* [How does it work](#how-does-it-work)
-* [Run with Docker](#run-with-docker)
-* [Easy API](#easy-api)
-* [Authentication](#authentication)
-    * [JWT](#jwt-authentication)
-* [Configuration](#configuration)
-* [UI](#ui)
-* [Debug](#debug)
-* [Proven players](#proven-players)
-* [Contributions and reporting issues](#contributions-and-reporting-issues)
+
+-   [How does it work](#how-does-it-work)
+-   [Run with Docker](#run-with-docker)
+-   [Easy API](#easy-api)
+-   [Authentication](#authentication)
+    -   [JWT](#jwt-authentication)
+-   [Configuration](#configuration)
+-   [UI](#ui)
+-   [Debug](#debug)
+-   [Proven players](#proven-players)
+-   [Contributions and reporting issues](#contributions-and-reporting-issues)
 
 ## How does it work
 
@@ -45,13 +46,15 @@ The application has an offical [Docker repository](https://hub.docker.com/r/rove
 ```s
 docker run -p 80:8080 roverr/rtsp-stream:2
 ```
+
 ## Easy API
 
 There are 4 endpoints that are fully configurable to call
-* `/start` - to start transcoding of a stream
-* `/stream/id/*fileId` - static endpoint to serve video files for your browser
-* `/list` - lists streams already known
-* `/stop` - stops and removes a given stream
+
+-   `/start` - to start transcoding of a stream
+-   `/stream/id/*fileId` - static endpoint to serve video files for your browser
+-   `/list` - lists streams already known
+-   `/stop` - stops and removes a given stream
 
 [Read full documentation on API](docs/api/README.md).
 
@@ -64,7 +67,6 @@ want to protect the service. This application was not written to handle users an
 **By default there is no authentication** what so ever. This can be useful if you have private subnets
 where there is no real way to reach the service from the internet. (So every request is kind of trusted.) Also works great
 if you just wanna try it out, maybe for home use.
-
 
 ### JWT Authentication
 
@@ -80,12 +82,12 @@ It is the easiest way to integrate into existing systems.
 
 The following environment variables are available for this setup:
 
-| Env variable | Description | Default | Type |
-| :---        |    :----   |          ---: | :--- |
-| RTSP_STREAM_AUTH_JWT_ENABLED | Indicates if the service should use the JWT authentication for the requests | `false` | bool |
-| RTPS_STREAM_AUTH_JWT_SECRET | The secret used for creating the JWT tokens | `macilaci` | string |
-| RTSP_STREAM_AUTH_JWT_PUB_PATH | Path to the public shared RSA key.| `/key.pub` | string |
-| RTSP_STREAM_AUTH_JWT_METHOD | Can be `secret` or `rsa`. Changes how the application does the JWT verification.| `secret` | string |
+| Env variable                  | Description                                                                      |    Default | Type   |
+| :---------------------------- | :------------------------------------------------------------------------------- | ---------: | :----- |
+| RTSP_STREAM_AUTH_JWT_ENABLED  | Indicates if the service should use the JWT authentication for the requests      |    `false` | bool   |
+| RTPS_STREAM_AUTH_JWT_SECRET   | The secret used for creating the JWT tokens                                      | `macilaci` | string |
+| RTSP_STREAM_AUTH_JWT_PUB_PATH | Path to the public shared RSA key.                                               | `/key.pub` | string |
+| RTSP_STREAM_AUTH_JWT_METHOD   | Can be `secret` or `rsa`. Changes how the application does the JWT verification. |   `secret` | string |
 
 You won't need the private key for it because no signing happens in this application.
 
@@ -93,12 +95,13 @@ You won't need the private key for it because no signing happens in this applica
 
 The application tries to be as flexible as possible therefore there are a lot of configuration options available.
 You can set the following information in the application:
-* Sub directory where the application stores video chunks
-* Time period for the cleanup process that stops streams if they are inactive
-* Option to keep all video chunks forever instead of removing them when a stream becomes inactive
-* Logging options for the underlying ffmpeg process
-* CORS and other HTTP related options for the backend server itself
-* Debug options for easier time when trying to find out what's wrong
+
+-   Sub directory where the application stores video chunks
+-   Time period for the cleanup process that stops streams if they are inactive
+-   Option to keep all video chunks forever instead of removing them when a stream becomes inactive
+-   Logging options for the underlying ffmpeg process
+-   CORS and other HTTP related options for the backend server itself
+-   Debug options for easier time when trying to find out what's wrong
 
 Check the full list of environment variables [here](docs/configuration/README.md)
 
@@ -116,19 +119,18 @@ If you decide to use the management image, you should know that port 80 is flexi
 
 You should expect something like this:
 
-
 <img src="./docs/ui.gif"/>
-
 
 ## Debug
 
 Debug information is described [here](docs/debugging/README.md)
 
 ## Proven players
+
 The following list of players has been already tried out in production environment using this backend:
 
-* Angular - [videogular](http://www.videogular.com/)
-* React - [ReactHLS](https://github.com/foxford/react-hls)
+-   Angular - [videogular](http://www.videogular.com/)
+-   React - [ReactHLS](https://github.com/foxford/react-hls)
 
 ## Contributions and reporting issues
 
